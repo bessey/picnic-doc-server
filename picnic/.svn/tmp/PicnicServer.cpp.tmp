@@ -1,0 +1,99 @@
+#include "PicnicServer.h"
+#include <stdio.h>
+#include <json/json.h>
+#include "DBInterface.h"
+
+PicnicServer::PicnicServer(std::string db_path)
+{
+    database = new DBInterface(db_path);
+}
+
+PicnicServer::~PicnicServer()
+{
+    delete database;
+}
+
+// Process a string representing JSON input
+// 1. convert message into JSON
+// 2. get msgtype of message
+// 3. send requisite data to specific function
+// 4. return resulting string 
+std::string PicnicServer::process(std::string user_id, std::string message)
+{
+    Json::Value data;
+    Json::Reader reader;
+    std::string msgtype;
+    const std::string failure = "{\"msgtype\":\"failure\"}";
+	std::string id = database->query("SELECT id FROM users WHERE username = \""+user_id+"\"");
+    
+    bool success = reader.parse(message, data);
+    
+    if(!success)
+    {
+        return failure;    
+    }
+    
+    msgtype = data.get("msgtype", "failure").asString();
+    
+    if(msgtype == "get_unis")
+        { return getUnis(); }
+    else if(msgtype == "get_solo_files")
+        { return getSoloFiles(&data); }
+    else
+        { return failure; }
+    
+}
+
+// Retrieve a list of university data
+std::string PicnicServer::getUnis()
+{
+    std::string message = "{\"msgtype\":\"get_unis\",\"unis\":";
+    
+    message += database->query("SELECT * FROM universities;");
+    
+    message += "}";
+    
+    return message;
+}
+
+// Retrieve a list of files on the server, with the courseIDs they are linked
+// to, given a user.
+std::string PicnicServer::getSoloFiles(Json::Value* data)
+{
+    std::string message = "{\"msgtype\":\"get_solo_files\",\"files\":";
+    
+    std::string owner = data->get("owner", "failure").asString();
+    
+    if(owner == "failure") return "failure";
+    
+    message += database->query(
+    "SELECT solo_docs.id, solo_docs.name, courses.id, courses.name "
+    "FROM solo_docs "
+    "INNER JOIN courses ON solo_docs.course_id = courses.id "
+    "WHERE solo_docs.owner = " + owner + ";"
+    );
+    
+    message += "}";
+    
+    return message;
+}
+
+// Save a document on the server
+void PicnicServer::saveDoc(std::string user_id, Json::Value data)
+{
+}
+
+// Load a document from the server
+void PicnicServer::loadDoc(std::string user_id, Json::Value data)
+{
+}
+
+// Returns the courses at a specific university
+void PicnicServer::getCourses(Json::Value data)
+{
+}
+        
+// Retrieve courses for a specific user
+void PicnicServer::getUserCourses(Json::Value data)
+{
+}

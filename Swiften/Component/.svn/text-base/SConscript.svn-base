@@ -1,0 +1,12 @@
+Import("swiften_env")
+
+sources = [
+		"ComponentHandshakeGenerator.cpp",
+		"ComponentConnector.cpp",
+		"ComponentSession.cpp",
+		"ComponentSessionStanzaChannel.cpp",
+		"CoreComponent.cpp",
+		"Component.cpp",
+	]
+
+swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))

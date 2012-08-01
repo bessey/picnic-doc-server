@@ -1,0 +1,12 @@
+Import("swiften_env")
+
+myenv = swiften_env.Clone()
+
+SConscript(dirs = [
+	"SendMessage",
+	"SendFile",
+	"ConnectivityTest",
+	"LinkLocalTool",
+	"ParserTester",
+	"BenchTool",
+])

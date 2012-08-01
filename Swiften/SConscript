@@ -1,0 +1,335 @@
+import os
+
+Import("env")
+
+################################################################################
+# Flags
+################################################################################
+
+swiften_dep_modules = ["BOOST", "LIBIDN", "ZLIB", "OPENSSL", "LIBXML", "EXPAT", "AVAHI"]
+
+if env["SCONS_STAGE"] == "flags" :
+	swiften_env = env.Clone()
+	swiften_env["LIBPATH"] = [Dir(".")]
+	swiften_env["LIBS"] = ["Swiften"]
+	dep_env = env.Clone()
+	for module in swiften_dep_modules :
+		if env.get(module + "_BUNDLED", False) :
+			swiften_env.UseFlags(env.get(module + "_FLAGS", {}))
+		else :
+			dep_env.UseFlags(env.get(module + "_FLAGS", {}))
+	dep_env.UseFlags(dep_env["PLATFORM_FLAGS"])
+
+	for var, e in [("SWIFTEN_FLAGS", swiften_env), ("SWIFTEN_DEP_FLAGS", dep_env)] : 
+		env[var] = {
+				"CPPDEFINES": e.get("CPPDEFINES", []),
+				"CPPPATH": e.get("CPPPATH", []),
+				"CPPFLAGS": e.get("CPPFLAGS", []),
+				"LIBPATH": e.get("LIBPATH", []),
+				"LIBS": e.get("LIBS", []),
+			}
+
+################################################################################
+# Build
+################################################################################
+
+if env["SCONS_STAGE"] == "build" :
+	swiften_env = env.Clone()
+	for module in swiften_dep_modules :
+		swiften_env.UseFlags(swiften_env.get(module + "_FLAGS", {}))
+	swiften_env.UseFlags(swiften_env["PLATFORM_FLAGS"])
+	def buildObject(env, sources) :
+		if ARGUMENTS.get("swiften_dll", False) :
+			return env.SharedObject(sources)
+		else :
+			return env.StaticObject(sources)
+	swiften_env.AddMethod(buildObject, "SwiftenObject")
+
+	Export("swiften_env")
+
+# TODO: Move all this to a submodule SConscript
+	myenv = swiften_env.Clone()
+	sources = [
+			"Chat/ChatStateTracker.cpp",
+			"Chat/ChatStateNotifier.cpp",
+			"Client/ClientSessionStanzaChannel.cpp",
+			"Client/CoreClient.cpp",
+			"Client/Client.cpp",
+			"Client/ClientSession.cpp",
+			"Client/MemoryStorages.cpp",
+			"Client/FileStorages.cpp",
+			"Client/NickResolver.cpp",
+			"Client/NickManager.cpp",
+			"Client/NickManagerImpl.cpp",
+			"Compress/ZLibCodecompressor.cpp",
+			"Compress/ZLibDecompressor.cpp",
+			"Compress/ZLibCompressor.cpp",
+			"Elements/DiscoInfo.cpp",
+			"Elements/Form.cpp",
+			"Elements/Element.cpp",
+			"Elements/IQ.cpp",
+			"Elements/Payload.cpp",
+			"Elements/RosterPayload.cpp",
+			"Elements/Stanza.cpp",
+			"Elements/VCard.cpp",
+			"Elements/MUCOccupant.cpp",
+			"Entity/Entity.cpp",
+			"MUC/MUC.cpp",
+			"MUC/MUCManager.cpp",
+			"MUC/MUCRegistry.cpp",
+			"MUC/MUCBookmarkManager.cpp",
+			"Queries/IQChannel.cpp",
+			"Queries/IQHandler.cpp",
+			"Queries/IQRouter.cpp",
+			"Queries/Request.cpp",
+			"Queries/Requests/GetInBandRegistrationFormRequest.cpp",
+			"Queries/Requests/SubmitInBandRegistrationFormRequest.cpp",
+			"Queries/Responders/SoftwareVersionResponder.cpp",
+			"Roster/XMPPRoster.cpp",
+			"Roster/XMPPRosterImpl.cpp",
+			"Roster/XMPPRosterController.cpp",
+			"Serializer/AuthRequestSerializer.cpp",
+			"Serializer/AuthSuccessSerializer.cpp",
+			"Serializer/AuthChallengeSerializer.cpp",
+			"Serializer/AuthResponseSerializer.cpp",
+			"Serializer/CompressRequestSerializer.cpp",
+			"Serializer/ElementSerializer.cpp",
+			"Serializer/MessageSerializer.cpp",
+			"Serializer/ComponentHandshakeSerializer.cpp",
+			"Serializer/PayloadSerializer.cpp",
+			"Serializer/PayloadSerializerCollection.cpp",
+			"Serializer/PayloadSerializers/IBBSerializer.cpp",
+			"Serializer/PayloadSerializers/CapsInfoSerializer.cpp",
+			"Serializer/PayloadSerializers/ChatStateSerializer.cpp",
+			"Serializer/PayloadSerializers/DiscoInfoSerializer.cpp",
+			"Serializer/PayloadSerializers/DiscoItemsSerializer.cpp",
+			"Serializer/PayloadSerializers/ErrorSerializer.cpp",
+			"Serializer/PayloadSerializers/FullPayloadSerializerCollection.cpp",
+			"Serializer/PayloadSerializers/MUCPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/MUCUserPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/MUCOwnerPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/ResourceBindSerializer.cpp",
+			"Serializer/PayloadSerializers/RosterSerializer.cpp",
+			"Serializer/PayloadSerializers/SecurityLabelSerializer.cpp",
+			"Serializer/PayloadSerializers/SecurityLabelsCatalogSerializer.cpp",
+			"Serializer/PayloadSerializers/SoftwareVersionSerializer.cpp",
+			"Serializer/PayloadSerializers/StreamInitiationSerializer.cpp",
+			"Serializer/PayloadSerializers/BytestreamsSerializer.cpp",
+			"Serializer/PayloadSerializers/VCardSerializer.cpp",
+			"Serializer/PayloadSerializers/VCardUpdateSerializer.cpp",
+			"Serializer/PayloadSerializers/StorageSerializer.cpp",
+			"Serializer/PayloadSerializers/PrivateStorageSerializer.cpp",
+			"Serializer/PayloadSerializers/DelaySerializer.cpp",
+			"Serializer/PayloadSerializers/CommandSerializer.cpp",
+			"Serializer/PayloadSerializers/InBandRegistrationPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/SearchPayloadSerializer.cpp",
+			"Serializer/PayloadSerializers/FormSerializer.cpp",
+			"Serializer/PayloadSerializers/NicknameSerializer.cpp",
+			"Serializer/PresenceSerializer.cpp",
+			"Serializer/StanzaSerializer.cpp",
+			"Serializer/StreamErrorSerializer.cpp",
+			"Serializer/StreamFeaturesSerializer.cpp",
+			"Serializer/XML/XMLElement.cpp",
+			"Serializer/XML/XMLNode.cpp",
+			"Serializer/XMPPSerializer.cpp",
+			"Server/ServerFromClientSession.cpp",
+			"Server/ServerSession.cpp",
+			"Server/ServerStanzaRouter.cpp",
+			"Server/SimpleUserRegistry.cpp",
+			"Server/UserRegistry.cpp",
+			"Session/Session.cpp",
+			"Session/SessionStream.cpp",
+			"Session/BasicSessionStream.cpp",
+			"StringCodecs/Base64.cpp",
+			"StringCodecs/SHA1.cpp",
+			"StringCodecs/HMACSHA1.cpp",
+			"StringCodecs/MD5.cpp",
+			"StringCodecs/PBKDF2.cpp",
+			"StringCodecs/Hexify.cpp",
+		]
+
+	SConscript(dirs = [
+			"Avatars",
+			"Base",
+			"IDN",
+			"SASL",
+			"TLS",
+			"EventLoop",
+			"Parser",
+			"JID",
+			"Jingle",
+			"Disco",
+			"VCards",
+			"Network",
+			"Presence",
+			"FileTransfer",
+			"History",
+			"StreamStack",
+			"LinkLocal",
+			"StreamManagement",
+			"Component",
+			"Config",
+		])
+	SConscript(test_only = True, dirs = [
+			"QA",
+		])
+	SConscript(dirs = [
+			"Examples"
+		])
+
+	if ARGUMENTS.get("swiften_dll", False) :
+		swiften_lib = myenv.SharedLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+	else :
+		swiften_lib = myenv.StaticLibrary("Swiften", sources + swiften_env["SWIFTEN_OBJECTS"])
+
+	env.Append(UNITTEST_SOURCES = [
+			File("Avatars/UnitTest/VCardUpdateAvatarManagerTest.cpp"),
+			File("Avatars/UnitTest/VCardAvatarManagerTest.cpp"),
+			File("Avatars/UnitTest/CombinedAvatarProviderTest.cpp"),
+			File("Base/UnitTest/IDGeneratorTest.cpp"),
+			File("Base/UnitTest/StringTest.cpp"),
+			File("Base/UnitTest/ByteArrayTest.cpp"),
+			File("Chat/UnitTest/ChatStateNotifierTest.cpp"),
+#		File("Chat/UnitTest/ChatStateTrackerTest.cpp"),
+			File("Client/UnitTest/ClientSessionTest.cpp"),
+			File("Client/UnitTest/NickResolverTest.cpp"),
+			File("Compress/UnitTest/ZLibCompressorTest.cpp"),
+			File("Compress/UnitTest/ZLibDecompressorTest.cpp"),
+			File("Component/UnitTest/ComponentHandshakeGeneratorTest.cpp"),
+			File("Component/UnitTest/ComponentConnectorTest.cpp"),
+			File("Component/UnitTest/ComponentSessionTest.cpp"),
+			File("Disco/UnitTest/CapsInfoGeneratorTest.cpp"),
+			File("Disco/UnitTest/CapsManagerTest.cpp"),
+			File("Disco/UnitTest/EntityCapsManagerTest.cpp"),
+			File("Disco/UnitTest/JIDDiscoInfoResponderTest.cpp"),
+			File("Disco/UnitTest/DiscoInfoResponderTest.cpp"),
+			File("Elements/UnitTest/IQTest.cpp"),
+			File("Elements/UnitTest/StanzaTest.cpp"),
+			File("Elements/UnitTest/FormTest.cpp"),
+			File("EventLoop/UnitTest/EventLoopTest.cpp"),
+			File("EventLoop/UnitTest/SimpleEventLoopTest.cpp"),
+			File("FileTransfer/UnitTest/SOCKS5BytestreamServerSessionTest.cpp"),
+			File("FileTransfer/UnitTest/IBBSendSessionTest.cpp"),
+#			File("History/UnitTest/SQLiteHistoryManagerTest.cpp"),
+			File("JID/UnitTest/JIDTest.cpp"),
+			File("LinkLocal/UnitTest/LinkLocalConnectorTest.cpp"),
+			File("LinkLocal/UnitTest/LinkLocalServiceBrowserTest.cpp"),
+			File("LinkLocal/UnitTest/LinkLocalServiceInfoTest.cpp"),
+			File("LinkLocal/UnitTest/LinkLocalServiceTest.cpp"),
+			File("MUC/UnitTest/MUCTest.cpp"),
+			File("Network/UnitTest/HostAddressTest.cpp"),
+			File("Network/UnitTest/ConnectorTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/BodyParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/DiscoInfoParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/ErrorParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/FormParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/CommandParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/PriorityParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/RawXMLPayloadParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/ResourceBindParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/RosterParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/IBBParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/SearchPayloadParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/SecurityLabelParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/SecurityLabelsCatalogParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/SoftwareVersionParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/StatusParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/StatusShowParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/StreamInitiationParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/VCardParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/StorageParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/PrivateStorageParserTest.cpp"),
+			File("Parser/PayloadParsers/UnitTest/VCardUpdateParserTest.cpp"),
+			File("Parser/UnitTest/AttributeMapTest.cpp"),
+			File("Parser/UnitTest/IQParserTest.cpp"),
+			File("Parser/UnitTest/MessageParserTest.cpp"),
+			File("Parser/UnitTest/PayloadParserFactoryCollectionTest.cpp"),
+			File("Parser/UnitTest/PresenceParserTest.cpp"),
+			File("Parser/UnitTest/StanzaAckParserTest.cpp"),
+			File("Parser/UnitTest/SerializingParserTest.cpp"),
+			File("Parser/UnitTest/StanzaParserTest.cpp"),
+			File("Parser/UnitTest/StreamFeaturesParserTest.cpp"),
+			File("Parser/UnitTest/XMLParserTest.cpp"),
+			File("Parser/UnitTest/XMPPParserTest.cpp"),
+			File("Presence/UnitTest/PresenceOracleTest.cpp"),
+			File("Presence/UnitTest/DirectedPresenceSenderTest.cpp"),
+			File("Presence/UnitTest/PayloadAddingPresenceSenderTest.cpp"),
+			File("Queries/Requests/UnitTest/GetPrivateStorageRequestTest.cpp"),
+			File("Queries/UnitTest/IQRouterTest.cpp"),
+			File("Queries/UnitTest/RequestTest.cpp"),
+			File("Queries/UnitTest/ResponderTest.cpp"),
+			File("Roster/UnitTest/XMPPRosterImplTest.cpp"),
+			File("Roster/UnitTest/XMPPRosterControllerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/PayloadsSerializer.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/CapsInfoSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/FormSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/DiscoInfoSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/ErrorSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/PrioritySerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/ResourceBindSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/RosterSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/SearchPayloadSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/SecurityLabelSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/SecurityLabelsCatalogSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/SoftwareVersionSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/StatusSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/StatusShowSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/StreamInitiationSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/InBandRegistrationPayloadSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/VCardUpdateSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/VCardSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/StorageSerializerTest.cpp"),
+			File("Serializer/PayloadSerializers/UnitTest/PrivateStorageSerializerTest.cpp"),
+			File("Serializer/UnitTest/StreamFeaturesSerializerTest.cpp"),
+			File("Serializer/UnitTest/AuthSuccessSerializerTest.cpp"),
+			File("Serializer/UnitTest/AuthChallengeSerializerTest.cpp"),
+			File("Serializer/UnitTest/AuthRequestSerializerTest.cpp"),
+			File("Serializer/UnitTest/AuthResponseSerializerTest.cpp"),
+			File("Serializer/UnitTest/XMPPSerializerTest.cpp"),
+			File("Serializer/XML/UnitTest/XMLElementTest.cpp"),
+			File("StreamManagement/UnitTest/StanzaAckRequesterTest.cpp"),
+			File("StreamManagement/UnitTest/StanzaAckResponderTest.cpp"),
+			File("StreamStack/UnitTest/StreamStackTest.cpp"),
+			File("StreamStack/UnitTest/XMPPLayerTest.cpp"),
+			File("StringCodecs/UnitTest/Base64Test.cpp"),
+			File("StringCodecs/UnitTest/SHA1Test.cpp"),
+			File("StringCodecs/UnitTest/MD5Test.cpp"),
+			File("StringCodecs/UnitTest/HexifyTest.cpp"),
+			File("StringCodecs/UnitTest/HMACSHA1Test.cpp"),
+			File("StringCodecs/UnitTest/PBKDF2Test.cpp"),
+			File("TLS/UnitTest/ServerIdentityVerifierTest.cpp"),
+			File("TLS/UnitTest/CertificateTest.cpp"),
+			File("VCards/UnitTest/VCardManagerTest.cpp"),
+		])
+	
+	# Generate the Swiften header
+	swiften_header = "#pragma once\n"
+	swiften_includes = []
+	top_path = env.Dir("..").abspath
+	public_dirs = ["Avatars", "Base", "Chat", "Client", "Component", "Disco", "Entity", "Elements", "JID", "MUC", "Network", "Parser", "Presence", "Queries", "Roster", "Serializer", "StringCodecs", "TLS", "VCards"]
+	for public_dir in public_dirs :
+		for root, dirs, files in os.walk(env.Dir(public_dir).abspath) :
+			if root.endswith("UnitTest") :
+				continue
+			for file in files :
+				if not file.endswith(".h") :
+					continue
+				include = os.path.relpath(os.path.join(root, file), top_path)
+				swiften_includes.append(include)
+				if root.endswith("OpenSSL") :
+					continue
+				if file.startswith("CAres") or file.startswith("LibXML") or file.startswith("Expat") :
+					continue
+				swiften_header += "#include <" + include + ">\n"
+				swiften_includes.append(include)
+	for file in ["EventLoop/SimpleEventLoop.h"] :
+				swiften_header += "#include <Swiften/" + file + ">\n"		
+				swiften_includes.append("Swiften/" + file)
+	swiften_env.WriteVal("Swiften.h", swiften_env.Value(swiften_header))
+	swiften_includes.append("Swiften/Swiften.h")
+
+	# Install swiften
+	if swiften_env.get("SWIFTEN_INSTALLDIR", "") :
+		swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "lib"), swiften_lib)
+		for include in swiften_includes :
+			swiften_env.Install(os.path.join(swiften_env["SWIFTEN_INSTALLDIR"], "include", os.path.dirname(include)), "#/" + include)

@@ -1,0 +1,36 @@
+Import("swiften_env")
+
+myenv = swiften_env.Clone()
+myenv.MergeFlags(myenv["LIBIDN_FLAGS"])
+if myenv.get("HAVE_CARES", False) :
+   myenv.MergeFlags(myenv.get("CARES_FLAGS", {}))
+
+sourceList = [
+			"BoostConnection.cpp",
+			"BoostConnectionFactory.cpp",
+			"BoostConnectionServer.cpp",
+			"BoostIOServiceThread.cpp",
+			"ConnectionFactory.cpp",
+			"ConnectionServer.cpp",
+ 			"Connector.cpp",
+			"TimerFactory.cpp",
+			"DummyTimerFactory.cpp",
+			"BoostTimerFactory.cpp",
+			"DomainNameResolver.cpp",
+			"DomainNameAddressQuery.cpp",
+			"DomainNameServiceQuery.cpp",
+			"PlatformDomainNameResolver.cpp",
+			"PlatformDomainNameServiceQuery.cpp",
+			"PlatformDomainNameAddressQuery.cpp",
+			"StaticDomainNameResolver.cpp",
+			"HostAddress.cpp",
+			"NetworkFactories.cpp",
+			"BoostNetworkFactories.cpp",
+			"Timer.cpp",
+			"BoostTimer.cpp"]
+if myenv.get("HAVE_CARES", False) :
+   sourceList.append("CAresDomainNameResolver.cpp")
+		
+
+objects = myenv.SwiftenObject(sourceList)
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

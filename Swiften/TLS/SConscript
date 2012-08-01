@@ -1,0 +1,26 @@
+Import("swiften_env")
+
+objects = swiften_env.SwiftenObject([
+			"Certificate.cpp",
+			"CertificateFactory.cpp",
+			"CertificateTrustChecker.cpp",
+			"ServerIdentityVerifier.cpp",
+			"TLSContext.cpp",
+			"TLSContextFactory.cpp",
+		])
+		
+myenv = swiften_env.Clone()
+if myenv.get("HAVE_OPENSSL", 0) :
+	myenv.MergeFlags(myenv["OPENSSL_FLAGS"])
+	objects += myenv.SwiftenObject([
+			"OpenSSL/OpenSSLContext.cpp",
+			"OpenSSL/OpenSSLCertificate.cpp",
+			"OpenSSL/OpenSSLContextFactory.cpp",
+		])
+	myenv.Append(CPPDEFINES = "HAVE_OPENSSL")
+
+objects += myenv.SwiftenObject(["PlatformTLSFactories.cpp"])
+
+		
+
+swiften_env.Append(SWIFTEN_OBJECTS = [objects])

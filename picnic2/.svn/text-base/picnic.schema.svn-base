@@ -1,0 +1,211 @@
+/*
+JOIN MUC command: (Only command that does not use the database.)
+{ "msgtype":"join_muc","unit_id":"1234" }
+*/
+{
+    "schema":
+    [
+		// New User / Shared Commands
+        {
+            "msgtype":"get_unis",
+            "tokens":[],
+            "query":"SELECT id, name, email FROM university",
+            "return_type":"all",
+            "return_name":"unis"
+        },
+        {
+            "msgtype":"get_courses",
+            "tokens":["uni_id"],
+            "query":"SELECT id, name FROM course WHERE uni_id = $uni_id$",
+            "return_type":"all",
+            "return_name":"courses"
+        },
+        {
+            "msgtype":"get_units",
+            "tokens":["course_id"],
+            "query":"SELECT id, name FROM unit WHERE course_id = $course_id$",
+            "return_type":"all",
+            "return_name":"units"
+        },
+        {
+	    "msgtype":"get_enroll_units",
+	    "tokens":["username"],
+	    "query":"SELECT unit_id AS id, name FROM user 
+				INNER JOIN (SELECT user_id, name, unit_id FROM membership INNER JOIN unit ON unit_id = id)
+				ON user_id = id WHERE username = '$username$'",
+	    "return_type":"all",
+	    "return_name":"units"
+	},
+		{
+            "msgtype":"create_user",
+            "tokens":["username","firstname","surname","uni_id","course_id","email","type"],
+            "query":"INSERT INTO user (username, firstname, surname, uni_id, course_id, email, type)
+ 				VALUES ('$username$','$firstname$', '$surname$', $uni_id$,  $course_id$, '$email$', '$type$')",
+            "return_type":"embed",
+            "return_name":"recieved_user_info"			
+		},
+		{
+            "msgtype":"update_user_info",
+            "tokens":["username","firstname","surname","uni_id","course_id","email","type"],
+            "query":"UPDATE user SET firstname = '$firstname$', surname = '$surname$',
+				uni_id = $uni_id$, course_id = $course_id$, email = '$email$',
+				type = '$type$'
+				WHERE username = '$username$'",
+            "return_type":"embed",
+            "return_name":"recieved_user_info"			
+		},
+		{
+            "msgtype":"get_user_info",
+            "tokens":["username"],
+            "query":"SELECT * FROM user WHERE username = '$username$'",
+            "return_type":"single",
+            "return_name":"recieved_user_info"						
+		},
+		// Lecturer Commands
+		{
+			// To be used after a lecture, to retrive an entire lecture's feedback
+			"msgtype":"get_lecture_feedback",
+            "tokens":["lecture_id"],
+            "query":"SELECT id, type FROM feedback WHERE lecture_id = $lecture_id$",
+            "return_type":"all",
+            "return_name":"lecture_feedback" 
+		},
+		{
+			// Since feedback is tied to lectures, a lecturer MUST create an entry
+			// in the lecture table for each lecture.
+			"msgtype":"create_lecture",
+            "tokens":["username","name","unit_id","description","start_time"],
+            "query":"INSERT INTO lecture (name, lecturer, unit_id, description, start_time)  
+				SELECT '$name$', id, $unit_id$, '$description$', '$start_time$' FROM user WHERE username = 
+				'$username$';",
+            "return_type":"embed_id",
+            "return_name":"recieved_create_lecture" 
+		},
+		// Student Commands
+
+		{
+			"msgtype":"send_lecture_feedback",
+            "tokens":["lecture_id","feedback"],
+            "query":"INSERT INTO feedback (lecture_id, type) VALUES 
+				($lecure_id$, $feedback$)",
+            "return_type":"embed",
+            "return_name":"recieved_lecture_feedback"
+		},
+		{
+			"msgtype":"send_unit_question",
+            "tokens":["username","unit_id","question"],
+            "query":"INSERT INTO question (user_id,question,unit_id,timestamp_created) 
+				SELECT id,'$question$','$unit_id$', NOW() FROM user WHERE username =
+				'$username$'",
+            "return_type":"embed",
+            "return_name":"recieved_unit_question" 
+		},
+		{
+			"msgtype":"get_unit_questions",
+            "tokens":["unit_id"],
+            "query":"SELECT * FROM question WHERE
+				unit_id = '$unit_id$'",
+            "return_type":"all",
+            "return_name":"unit_questions" 
+		},
+		{
+			"msgtype":"send_unit_answer",
+            "tokens":["questin_id","answer"],
+            "query":"UPDATE question SET answer = '$answer$', answered = true,
+ 				timestamp_answered = NOW() 
+				WHERE id = '$question_id$'",
+            "return_type":"embed",
+            "return_name":"recieved_unit_question" 
+		},
+		{
+			"msgtype":"send_unit_q_upvote",
+            "tokens":["username","question_id"],
+            "query":"INSERT INTO upvote (user_id,question_id) 
+				SELECT id,'$question_id$' FROM user WHERE username =
+				'$username$'",
+            "return_type":"embed",
+            "return_name":"recieved_unit_q_upvote" 
+		},
+		{
+			// Enroll on a unit
+			"msgtype":"send_unit_enroll",
+            "tokens":["username","unit_id"],
+            "query":"INSERT INTO membership (user_id,unit_id) 
+				SELECT id,$unit_id$ FROM user WHERE username =
+				'$username$'",
+            "return_type":"embed",
+            "return_name":"recieved_unit_enroll" 
+		},
+		// Document Commands
+		{
+			//create a new unit
+			"msgtype":"create_unit",
+	    "tokens":["name","course_id"],
+	    "query":"INSERT INTO unit (name, course_id) VALUES
+				('$name$', $course_id$)",
+	    "return_type":"embed",
+	    "return_name":"created_new_unit"	
+		},
+		{
+			"msgtype":"create_doc",
+            "tokens":["username","name","unit_id","lecture_id","description"],
+            "query":"INSERT INTO doc (owner,unit_id,privacy,name,description,lecture_id,contents) 
+				SELECT id, $unit_id$, 1, '$name$', '$description$', $lecture_id$, '{\"current\":\"\"}' FROM user WHERE username = '$username$'",
+            "return_type":"embed",
+			// TODO: Return document ID
+            "return_name":"recieved_create_doc" 
+		},
+		{
+			"msgtype":"open_doc",
+            "tokens":["doc_id"],
+            "query":"SELECT id, name, owner, unit_id, privacy, description, lecture_id, contents 
+				FROM doc WHERE id = '$doc_id$'",
+            "return_type":"single",
+            "return_name":"doc" 
+		},
+		{
+			"msgtype":"edit_doc",
+            "tokens":["doc_id","name","contents"],
+            "query":"UPDATE doc SET contents = '$contents$',name = '$name$'
+				WHERE id = '$doc_id$'",
+            "return_type":"embed",
+            "return_name":"recieved_edit_doc" 			
+		},
+		{
+			// This is for joining a collaborative document
+			"msgtype":"send_collaborate_doc",
+            "tokens":["username","doc_id"],
+            "query":"INSERT INTO share (user_id,doc_id) VALUES
+				(SELECT id, $doc_id$ WHERE username = '$username$')",
+            "return_type":"embed",
+            "return_name":"recieved_doc_collaborate" 
+		},
+        {
+            "msgtype":"get_owned_docs",
+            "tokens":["username"],
+            "query":"SELECT doc.id AS id, name, doc.unit_id, doc.lecture_id FROM doc 
+				INNER JOIN user ON owner = user.id WHERE username = '$username$'",
+            "return_type":"all",
+            "return_name":"owned_docs" 
+        },
+        {
+            "msgtype":"get_unit_lectures",
+            "tokens":["unit_id"],
+            "query":"SELECT * FROM lecture 
+				WHERE unit_id = '$unit_id$'",
+            "return_type":"all",
+            "return_name":"unit_lectures" 
+        },		
+		{
+            "msgtype":"get_shared_docs",
+            "tokens":["username"],
+            "query":"SELECT doc.id AS id, name FROM share 
+				INNER JOIN user ON owner = user.id
+				INNER JOIN doc ON doc.id = share.doc_id
+				WHERE username = '$username$' ",
+            "return_type":"all",
+            "return_name":"owned_docs" 
+        },
+		
+	]
+}

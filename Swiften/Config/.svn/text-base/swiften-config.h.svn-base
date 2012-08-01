@@ -1,0 +1,29 @@
+const char* CPPFLAGS[] = {
+	"-DBOOST_ALL_NO_LIB",
+	"-DBOOST_SYSTEM_NO_DEPRECATED",
+	"-DBOOST_FILESYSTEM_VERSION=2",
+	"-DIDNA_STATIC",
+	"-I#",
+	"-I#/3rdParty/LibIDN/src",
+	"-I/usr/include/libxml2",
+	0
+};
+const char* LIBFLAGS[] = {
+	"-L#/Swiften",
+	"-L#/3rdParty/Boost",
+	"-L#/3rdParty/LibIDN",
+	"-lSwiften",
+	"-lSwiften_Boost",
+	"-lSwiften_IDN",
+	"-lz",
+	"-lssl",
+	"-lcrypto",
+	"-lxml2",
+	"-lresolv",
+	"-lpthread",
+	"-ldl",
+	"-lm",
+	"-lc",
+	"-lstdc++",
+	0
+};

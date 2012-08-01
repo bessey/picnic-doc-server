@@ -1,0 +1,11 @@
+Import("swiften_env")
+
+SConscript(dirs = [
+		"NetworkTest",
+#		"ReconnectTest",
+		"ClientTest",
+#		"DNSSDTest",
+		"StorageTest",
+		"TLSTest",
+		"ScriptedTests",
+	])

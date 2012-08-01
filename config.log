@@ -1,0 +1,338 @@
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 323:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking whether the C++ compiler works
+.sconf_temp/conftest_0.cpp <-
+  |
+  |int main()
+  |{
+  |    return 0;
+  |}
+  |
+g++ -o .sconf_temp/conftest_0.o -c -Wextra -Wall -Wnon-virtual-dtor -Wundef -Wold-style-cast -Wno-long-long -Woverloaded-virtual -Wfloat-equal -Wredundant-decls -g -I. .sconf_temp/conftest_0.cpp
+scons: Configure: yes
+
+scons: Configure: Checking whether the C compiler works
+.sconf_temp/conftest_1.c <-
+  |
+  |int main()
+  |{
+  |    return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_1.o -c -g -I. .sconf_temp/conftest_1.c
+scons: Configure: yes
+
+scons: Configure: Checking for C library z... 
+.sconf_temp/conftest_2.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_2.o -c -g -I. .sconf_temp/conftest_2.c
+gcc -o .sconf_temp/conftest_2 .sconf_temp/conftest_2.o -lz -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C library resolv... 
+.sconf_temp/conftest_3.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_3.o -c -g -I. .sconf_temp/conftest_3.c
+gcc -o .sconf_temp/conftest_3 .sconf_temp/conftest_3.o -lz -lresolv -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C library pthread... 
+.sconf_temp/conftest_4.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_4.o -c -g -I. .sconf_temp/conftest_4.c
+gcc -o .sconf_temp/conftest_4 .sconf_temp/conftest_4.o -lz -lresolv -lpthread -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C library dl... 
+.sconf_temp/conftest_5.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_5.o -c -g -I. .sconf_temp/conftest_5.c
+gcc -o .sconf_temp/conftest_5 .sconf_temp/conftest_5.o -lz -lresolv -lpthread -ldl -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C library m... 
+.sconf_temp/conftest_6.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_6.o -c -g -I. .sconf_temp/conftest_6.c
+gcc -o .sconf_temp/conftest_6 .sconf_temp/conftest_6.o -lz -lresolv -lpthread -ldl -lm -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C library c... 
+.sconf_temp/conftest_7.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_7.o -c -g -I. .sconf_temp/conftest_7.c
+gcc -o .sconf_temp/conftest_7 .sconf_temp/conftest_7.o -lz -lresolv -lpthread -ldl -lm -lc -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C library stdc++... 
+.sconf_temp/conftest_8.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_8.o -c -g -I. .sconf_temp/conftest_8.c
+gcc -o .sconf_temp/conftest_8 .sconf_temp/conftest_8.o -lz -lresolv -lpthread -ldl -lm -lc -lstdc++ -framework IOKit -framework AppKit
+scons: Configure: yes
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 370:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C++ header file boost/signals.hpp... 
+.sconf_temp/conftest_9.cpp <-
+  |
+  |#include "boost/signals.hpp"
+  |
+  |
+g++ -o .sconf_temp/conftest_9.o -c -Wextra -Wall -Wnon-virtual-dtor -Wundef -Wold-style-cast -Wno-long-long -Woverloaded-virtual -Wfloat-equal -Wredundant-decls -g -DBOOST_FILESYSTEM_VERSION=2 -I. .sconf_temp/conftest_9.cpp
+.sconf_temp/conftest_9.cpp:2:29: error: boost/signals.hpp: No such file or directory
+scons: Configure: no
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 426:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for Objective-C header Sparkle/Sparkle.h ... 
+.sconf_temp/conftest_10.m <-
+  |#include <Cocoa/Cocoa.h>
+  |#include <Sparkle/Sparkle.h>
+gcc -o .sconf_temp/conftest_10.o -c -g -I. -F/Library/Frameworks .sconf_temp/conftest_10.m
+.sconf_temp/conftest_10.m:2:29: error: Sparkle/Sparkle.h: No such file or directory
+scons: Configure: no
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 442:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for Objective-C header Growl/Growl.h ... 
+.sconf_temp/conftest_11.m <-
+  |#include <Cocoa/Cocoa.h>
+  |#include <Growl/Growl.h>
+gcc -o .sconf_temp/conftest_11.o -c -g -I. -F/Library/Frameworks .sconf_temp/conftest_11.m
+.sconf_temp/conftest_11.m:2:25: error: Growl/Growl.h: No such file or directory
+scons: Configure: no
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 454:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file libxml/parser.h... 
+.sconf_temp/conftest_12.c <-
+  |
+  |#include "libxml/parser.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_12.o -c -g -I. .sconf_temp/conftest_12.c
+.sconf_temp/conftest_12.c:2:27: error: libxml/parser.h: No such file or directory
+scons: Configure: no
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 463:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file libxml/parser.h... 
+.sconf_temp/conftest_13.c <-
+  |
+  |#include "libxml/parser.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_13.o -c -g -I. -I/usr/include/libxml2 .sconf_temp/conftest_13.c
+scons: Configure: yes
+
+scons: Configure: Checking for C library xml2... 
+.sconf_temp/conftest_14.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_14.o -c -g -I. -I/usr/include/libxml2 .sconf_temp/conftest_14.c
+gcc -o .sconf_temp/conftest_14 .sconf_temp/conftest_14.o -lz -lresolv -lpthread -ldl -lm -lc -lstdc++ -lxml2 -framework IOKit -framework AppKit
+scons: Configure: yes
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 501:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file idna.h... 
+.sconf_temp/conftest_15.c <-
+  |
+  |#include "idna.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_15.o -c -g -I. .sconf_temp/conftest_15.c
+.sconf_temp/conftest_15.c:2:18: error: idna.h: No such file or directory
+scons: Configure: no
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 514:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file readline/readline.h... 
+.sconf_temp/conftest_16.c <-
+  |#include "stdio.h"
+  |
+  |#include "readline/readline.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_16.o -c -g -I. .sconf_temp/conftest_16.c
+scons: Configure: yes
+
+scons: Configure: Checking for C library readline... 
+.sconf_temp/conftest_17.c <-
+  |
+  |
+  |
+  |int
+  |main() {
+  |  
+  |return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_17.o -c -g -I. .sconf_temp/conftest_17.c
+gcc -o .sconf_temp/conftest_17 .sconf_temp/conftest_17.o -lz -lresolv -lpthread -ldl -lm -lc -lstdc++ -lreadline -framework IOKit -framework AppKit
+scons: Configure: yes
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 528:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file avahi-client/client.h... 
+.sconf_temp/conftest_18.c <-
+  |
+  |#include "avahi-client/client.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_18.o -c -g -I. .sconf_temp/conftest_18.c
+.sconf_temp/conftest_18.c:2:33: error: avahi-client/client.h: No such file or directory
+scons: Configure: no
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 553:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file openssl/ssl.h... 
+.sconf_temp/conftest_19.c <-
+  |
+  |#include "openssl/ssl.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_19.o -c -g -I. .sconf_temp/conftest_19.c
+scons: Configure: yes
+
+
+file /Users/bessey/Repos/SwiftClient/BuildTools/SCons/SConstruct,line 589:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C header file IOKit/IOKitLib.h... 
+.sconf_temp/conftest_20.c <-
+  |
+  |#include "IOKit/IOKitLib.h"
+  |
+  |
+gcc -o .sconf_temp/conftest_20.o -c -g -I. .sconf_temp/conftest_20.c
+scons: Configure: yes
+
+
+file /Users/bessey/Repos/SwiftClient/3rdParty/LibIDN/SConscript,line 32:
+	Configure(confdir = .sconf_temp)
+scons: Configure: Checking for C function strcasecmp()... 
+.sconf_temp/conftest_21.c <-
+  |
+  |
+  |#include <assert.h>
+  |
+  |#ifdef __cplusplus
+  |extern "C"
+  |#endif
+  |char strcasecmp();
+  |
+  |int main() {
+  |#if defined (__stub_strcasecmp) || defined (__stub___strcasecmp)
+  |  fail fail fail
+  |#else
+  |  strcasecmp();
+  |#endif
+  |
+  |  return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_21.o -c -g -I. .sconf_temp/conftest_21.c
+.sconf_temp/conftest_21.c:8: warning: conflicting types for built-in function 'strcasecmp'
+gcc -o .sconf_temp/conftest_21 .sconf_temp/conftest_21.o -lz -lresolv -lpthread -ldl -lm -lc -lstdc++ -lreadline -framework IOKit -framework AppKit
+scons: Configure: yes
+
+scons: Configure: Checking for C function strncasecmp()... 
+.sconf_temp/conftest_22.c <-
+  |
+  |
+  |#include <assert.h>
+  |
+  |#ifdef __cplusplus
+  |extern "C"
+  |#endif
+  |char strncasecmp();
+  |
+  |int main() {
+  |#if defined (__stub_strncasecmp) || defined (__stub___strncasecmp)
+  |  fail fail fail
+  |#else
+  |  strncasecmp();
+  |#endif
+  |
+  |  return 0;
+  |}
+  |
+gcc -o .sconf_temp/conftest_22.o -c -g -I. .sconf_temp/conftest_22.c
+.sconf_temp/conftest_22.c:8: warning: conflicting types for built-in function 'strncasecmp'
+gcc -o .sconf_temp/conftest_22 .sconf_temp/conftest_22.o -lz -lresolv -lpthread -ldl -lm -lc -lstdc++ -lreadline -framework IOKit -framework AppKit
+scons: Configure: yes
+
+

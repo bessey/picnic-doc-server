@@ -1,0 +1,43 @@
+#ifndef PICNICSERVER_H
+#define PICNICSERVER_H
+
+#include <json/json.h>
+#include "DBInterface.h"
+
+// A link between messaging client and database, can be queried using JSON to
+// access data in the database, as well as modifying it.
+class PicnicServer
+{
+    private:
+        DBInterface* database;
+    
+    private:
+        // Retrieve a list of university data
+        std::string getUnis();
+        
+        // Retrieve a list of files on the server, with the courseIDs they are linked
+        // to, given a user.
+        std::string getSoloFiles(Json::Value* data);
+        
+        // Save a document on the server
+        void saveDoc(std::string user_id, Json::Value data);
+        
+        // Load a document from the server
+        void loadDoc(std::string user_id, Json::Value data);
+        
+        // Returns the courses at a specific university
+        void getCourses(Json::Value data);
+        
+        // Retrieve courses for a specific user
+        void getUserCourses(Json::Value data);        
+    
+    public:
+        PicnicServer(std::string db_path);
+        
+        ~PicnicServer();
+    
+        // Process a string representing JSON input
+        std::string process(std::string user_id, std::string message);
+};
+
+#endif

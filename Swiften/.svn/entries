@@ -1,0 +1,266 @@
+10
+
+dir
+172
+svn://matt@ec2-79-125-52-167.eu-west-1.compute.amazonaws.com/picnic-server/SwiftClient/Swiften
+svn://matt@ec2-79-125-52-167.eu-west-1.compute.amazonaws.com/picnic-server
+
+
+
+2012-04-03T14:10:23.654562Z
+141
+matt
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+ecf077ca-4c27-4b3f-89a3-8076f06ab529
+
+Chat
+dir
+
+StreamStack
+dir
+
+Session
+dir
+
+MUC
+dir
+
+StreamManagement
+dir
+
+Parser
+dir
+
+Avatars
+dir
+
+History
+dir
+
+Component
+dir
+
+Presence
+dir
+
+Config
+dir
+
+Jingle
+dir
+
+Serializer
+dir
+
+IDN
+dir
+
+Base
+dir
+
+Entity
+dir
+
+Elements
+dir
+
+Queries
+dir
+
+Examples
+dir
+
+Client
+dir
+
+VCards
+dir
+
+FileTransfer
+dir
+
+StringCodecs
+dir
+
+SConscript
+file
+
+
+
+
+2011-04-18T17:41:05.000000Z
+ef3e9907a79957e28ea4fec622bc0dd9
+2012-01-18T21:11:36.946436Z
+21
+matt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+14978
+
+Network
+dir
+
+Compress
+dir
+
+CustomSwiften.h
+file
+
+
+
+
+2012-02-17T13:25:21.000000Z
+3c170beacf5017a5c6e1aa3884151faa
+2012-02-17T14:26:59.965809Z
+124
+matt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+899
+
+Disco
+dir
+
+QA
+dir
+
+SASL
+dir
+
+TLS
+dir
+
+.gitignore
+file
+
+
+
+
+2011-04-18T17:41:05.000000Z
+7a338b3e50f0f7ffe57552332432fb62
+2012-01-18T21:11:36.946436Z
+21
+matt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+18
+
+Swiften.h
+file
+
+
+
+
+2012-04-03T14:05:19.000000Z
+72f53a4ba1eedef32a94bdd51a357cdd
+2012-01-18T21:11:36.946436Z
+21
+matt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19268
+
+Server
+dir
+
+JID
+dir
+
+LinkLocal
+dir
+
+EventLoop
+dir
+
+Roster
+dir
+

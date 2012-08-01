@@ -1,0 +1,116 @@
+#include "PicnicServer.h"
+#include <stdio.h>
+#include <string.h>
+#include <json/json.h>
+#include "DBInterface.h"
+
+PicnicServer::PicnicServer(std::string db_path)
+{
+    database = new DBInterface(db_path);
+}
+
+PicnicServer::~PicnicServer()
+{
+    delete database;
+}
+
+// Process a string representing JSON input
+// 1. convert message into JSON
+// 2. get msgtype of message
+// 3. send requisite data to specific function
+// 4. return resulting string 
+std::string PicnicServer::process(std::string user_id, std::string message)
+{
+    Json::Value data;
+    Json::Reader reader;
+    std::string msgtype;
+    const std::string failure = "{\"msgtype\":\"failure\"}";
+	
+    bool success = reader.parse(message, data);
+    
+    if(!success)
+    {
+        return failure;    
+    }
+    
+    msgtype = data.get("msgtype", "failure").asString();
+    
+    if(msgtype == "get_unis")
+        { return getUnis(); }
+    else if(msgtype == "get_solo_files")
+        { return getSoloFiles(user_id,&data); }
+	else if(msgtype == "save_personal_data")
+		return saveUserData(user_id,&data);
+    else
+        { return failure; }
+    
+}
+
+// Retrieve a list of university data
+std::string PicnicServer::getUnis()
+{
+    std::string message = "{\"msgtype\":\"get_unis\",\"unis\":";
+    
+    message += database->query("SELECT * FROM universities;");
+    
+    message += "}";
+    
+    return message;
+}
+
+// Retrieve a list of files on the server, with the courseIDs they are linked
+// to, given a user.
+<<<<<<< .mine
+std::string PicnicServer::getSoloFiles(std::string user_id)
+=======
+std::string PicnicServer::getSoloFiles(Json::Value* data, std::string user_id)
+>>>>>>> .r69
+{
+    std::string message = "{\"msgtype\":\"get_solo_files\",\"files\":";
+        
+    message += database->query(
+    "SELECT solo_docs.id, solo_docs.name, courses.id, courses.name"
+    "FROM solo_docs "
+    "INNER JOIN courses ON solo_docs.course_id = courses.id "
+	"INNER JOIN users ON solo_docs.owner = users.id "
+    "WHERE users.username = " + user_id + ";"
+    );
+    message += "}";
+    
+    return message;
+}
+
+// Save a document on the server
+void PicnicServer::saveDoc(Json::Value* data, std::string user_id)
+{
+}
+
+// Load a document from the server
+void PicnicServer::loadDoc(Json::Value* data, std::string user_id)
+{
+}
+
+// Returns the courses at a specific university
+void PicnicServer::getCourses(Json::Value* data)
+{
+}
+        
+// Retrieve courses for a specific user
+void PicnicServer::getUserCourses(Json::Value* data, std::string user_id)
+{
+}
+
+void PicnicServer::saveUserData(std::string user_id, Json::Value data)
+{
+	std::string first_name = data["first_name"];
+	std::string last_name = data["last_name"];
+	std::string uni_id = data["uni_id"];
+	std::string email = data["email"];
+	
+	std::string query = "UPDATE users SET("
+	"'firstname' = ,"
+	"'surname' = ,"
+	"'uni_id', = "
+	"'email' = "
+	") WHERE username = '" + user_id + "';"
+}

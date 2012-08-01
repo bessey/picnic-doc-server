@@ -1,0 +1,19 @@
+Import("swiften_env")
+
+sources = [
+		"OutgoingFileTransfer.cpp",
+		"IncomingFileTransfer.cpp",
+		"IncomingJingleFileTransfer.cpp",
+		"IncomingFileTransferManager.cpp",	
+		"ReadBytestream.cpp",
+		"WriteBytestream.cpp",
+		"FileReadBytestream.cpp",
+		"FileWriteBytestream.cpp",
+		"SOCKS5BytestreamServer.cpp",
+		"SOCKS5BytestreamServerSession.cpp",
+		"SOCKS5BytestreamRegistry.cpp",
+		"IBBSendSession.cpp",
+		"IBBReceiveSession.cpp",
+	]
+
+swiften_env.Append(SWIFTEN_OBJECTS = swiften_env.SwiftenObject(sources))
